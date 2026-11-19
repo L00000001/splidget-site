@@ -1,7 +1,8 @@
 // POST /api/stripe-webhook
 // Stripe calls this directly (not the browser) whenever something happens on
 // your account. We only care about one event: checkout.session.completed —
-// a real, confirmed payment. On that, we tick the edition counter down by one.
+// a real, confirmed payment. On that, we tick the edition counter up by one
+// (rewards early adopters — first confirmed buyer gets E1-1/100).
 //
 // Needs two env vars set in Vercel:
 //   STRIPE_SECRET_KEY      — from Stripe dashboard > Developers > API keys
@@ -46,10 +47,10 @@ export default async function handler(req, res) {
   }
 
   if (event.type === 'checkout.session.completed') {
-    let count = await kv.get('splidget_count');
-    if (count === null || count === undefined) count = 100;
-    count = count - 1;
-    await kv.set('splidget_count', count);
+    let sold = await kv.get('splidget_sold');
+    if (sold === null || sold === undefined) sold = 0;
+    sold = sold + 1;
+    await kv.set('splidget_sold', sold);
   }
 
   res.status(200).json({ received: true });

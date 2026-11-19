@@ -1,11 +1,9 @@
 // GET /api/edition
-// Returns the current edition countdown number. Never blocks, never sold out —
-// it just reports whatever the counter currently stands at. Starts at 100 the
-// first time it's ever asked for, then only moves when stripe-webhook.js
-// decrements it on a confirmed payment.
+// Returns the edition number the NEXT confirmed buyer would receive. Rewards
+// early adopters — starts at 1 and only ever goes up, by one, on each
+// confirmed stripe payment (never sold out, never blocks a purchase; just
+// keeps counting).
 import { kv } from '@vercel/kv';
-
-const START = 100;
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -13,15 +11,15 @@ export default async function handler(req, res) {
     return;
   }
   try {
-    let count = await kv.get('splidget_count');
-    if (count === null || count === undefined) {
-      count = START;
-      await kv.set('splidget_count', count);
+    let sold = await kv.get('splidget_sold');
+    if (sold === null || sold === undefined) {
+      sold = 0;
+      await kv.set('splidget_sold', sold);
     }
     res.setHeader('Cache-Control', 'no-store');
-    res.status(200).json({ count: count });
+    res.status(200).json({ count: sold + 1 });
   } catch (err) {
     console.error('edition.js error:', err);
-    res.status(200).json({ count: START, fallback: true });
+    res.status(200).json({ count: 1, fallback: true });
   }
 }
