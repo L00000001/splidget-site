@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Splidget</title>
+<meta name="description" content="splidget.com — the original splidget. handmade in london. seriously fun.">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* splidget.com — two websites on top of each other.
+   Underneath: six scanner scans, three across, three below. Nothing else.
+   On top, fixed and central: the stamped wordmark, seriously fun, buy now. */
+:root{color-scheme:light}
+html{background:#fff}
+body{
+  margin:0;background:#fff;color:#000;
+  font-family:"Archivo","Helvetica Neue",Arial,sans-serif;
+  font-size:10px;line-height:1.8;letter-spacing:.09em;text-transform:uppercase;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:#000}
+a:hover{background:#000;color:#fff}
+:focus-visible{outline:2px solid #000;outline-offset:2px}
+p{margin:.8em 0}
+.mono{font-family:"Courier New",Courier,monospace;text-transform:none;letter-spacing:0}
+.just{text-align:justify;text-align-last:justify}
+
+/* ---------- underneath: the six scans ---------- */
+#archive{position:relative;z-index:1;max-width:1150px;margin:0 auto;padding:1.4rem 1.4rem 4rem}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem 1.1rem;align-items:start}
+@media (max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}}
+.cell img{display:block;width:100%;height:auto;border:1px solid #000;background:#fff}
+
+#site-footer{
+  position:relative;z-index:1;max-width:1150px;margin:0 auto;padding:2rem 1.4rem 3.5rem;
+  font-size:9px;letter-spacing:.13em;border-top:1px solid #000;
+}
+#footer-tabs{display:flex;flex-wrap:wrap;gap:1.2em 2em;justify-content:center;margin:0;padding:0;opacity:.75}
+.f-tab{background:none;border:none;font:inherit;letter-spacing:inherit;text-transform:uppercase;padding:0;margin:0;cursor:pointer;color:#000;opacity:.8}
+.f-tab:hover,.f-tab.active{opacity:1;text-decoration:underline}
+#footer-panel{display:none;max-width:32rem;margin:1.6em auto 0;font-size:9.5px;letter-spacing:.04em;line-height:1.8;text-align:center;opacity:.85}
+#footer-panel.open{display:block}
+.f-panel{display:none;margin:0}
+.f-panel.active{display:block}
+.f-panel a{text-decoration:underline}
+
+/* ---------- on top ---------- */
+#hero{
+  position:fixed;inset:0;z-index:5;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2.2rem;
+}
+#wordmark{display:block;width:min(72vw,680px);height:auto;mix-blend-mode:multiply}
+#cta-wrap{
+  pointer-events:auto;display:flex;flex-direction:row;flex-wrap:wrap;align-items:flex-start;
+  justify-content:center;gap:1.1em;font-size:10px;letter-spacing:.22em;font-weight:700;
+}
+#cta-wrap>a{text-decoration:none;border:1.5px solid #000;background:#fff;padding:.9em 1.7em;display:inline-block}
+#cta-wrap>a:hover{background:#000;color:#fff}
+
+/* ---------- get one: the button box itself expands into a till receipt ---------- */
+#get-one{width:128px;background:#fff;border:1.5px solid #000;box-shadow:0 10px 24px rgba(0,0,0,.14)}
+#get-one.open{width:min(94vw,380px)}
+#get-one-btn{
+  display:block;width:100%;margin:0;border:none;background:#fff;padding:.9em 0;
+  font:inherit;letter-spacing:.22em;font-weight:700;text-transform:uppercase;cursor:pointer;
+}
+#get-one-btn:hover{background:#000;color:#fff}
+#get-one.open #get-one-btn{border-bottom:1px solid #000}
+#receipt-row{display:none}
+#get-one.open #receipt-row{display:flex;align-items:stretch}
+#r-carousel{flex:0 0 34%;max-width:34%;border-right:1px solid #000;display:flex;flex-direction:column}
+#rc-img{display:block;width:100%;flex:1;min-height:0;object-fit:cover;background:#eee}
+.rc-dots{display:flex;justify-content:center;gap:.4em;padding:.4em 0;border-top:1px solid #000}
+.rc-dot{width:6px;height:6px;border-radius:50%;border:1px solid #000;background:#fff;padding:0;cursor:pointer}
+.rc-dot.active{background:#000}
+@media (max-width:480px){
+  #get-one.open #receipt-row{flex-direction:column}
+  #r-carousel{flex:0 0 auto;max-width:100%;border-right:none;border-bottom:1px solid #000}
+  #rc-img{height:110px;flex:none}
+}
+#receipt{flex:1;min-width:0;padding:.75em .65em .95em;text-align:left;
+  font-family:"Space Mono","Courier New",Courier,monospace;font-size:8.3px;letter-spacing:.05em;line-height:1.75}
+.r-order{text-align:center;font-weight:700;margin:0 0 .65em;letter-spacing:.04em}
+.r-line{display:flex;justify-content:space-between;gap:.5em;padding:.25em 0}
+.r-qty{align-items:center}
+.r-qty select{font:inherit;font-size:8.3px;border:1px solid #000;background:#fff;padding:.2em .2em}
+.r-field{margin:.4em 0 0}
+.r-field label{display:block;font-size:7.3px;letter-spacing:.09em;opacity:.65;margin:0 0 .15em}
+.r-field input,.r-field select{
+  width:100%;box-sizing:border-box;font:inherit;font-size:8.3px;border:1px solid #000;background:#fff;
+  padding:.15em .3em;border-radius:0;line-height:1.5;
+}
+.r-approx{opacity:.7;font-weight:400}
+.r-total{border-bottom:none;border-top:1px solid #000;margin-top:.5em;padding-top:.5em;font-weight:700}
+.r-note{font-size:7.1px;opacity:.6;margin:.6em 0 0;line-height:1.6}
+.r-note a{text-decoration:underline}
+#pay-now{
+  display:block;width:100%;margin:.8em 0 0;border:1.5px solid #000;background:#000;color:#fff;
+  padding:.65em 0;font-family:inherit;font-weight:700;font-size:8.6px;letter-spacing:.12em;
+  text-transform:uppercase;cursor:pointer;
+}
+#pay-now:hover{background:#fff;color:#000}
+#find-stockists{display:block;width:100%;margin:.55em 0 0;border:none;background:none;color:#000;
+  font-family:inherit;font-size:7.3px;letter-spacing:.1em;text-decoration:underline;cursor:pointer;padding:0;text-transform:uppercase}
+#stockists-note{font-size:7px;opacity:.65;margin:.4em 0 0;line-height:1.5;text-align:center}
+
+/* ---------- /authentication ---------- */
+#auth-view{display:none;position:relative;z-index:1;max-width:42rem;margin:0 auto;padding:1.4rem 1.4rem 6rem}
+.route-auth #hero,.route-auth #archive{display:none}
+.route-auth #auth-view{display:block}
+#auth-view img.wm-small{display:block;width:200px;height:auto;margin:0 0 1.6rem}
+#auth-view form{margin:1.4rem 0}
+label{display:block;margin:1.1em 0 .3em;font-weight:700;letter-spacing:.14em}
+input[type="text"],textarea{
+  font-family:"Archivo",Arial,sans-serif;font-size:11px;letter-spacing:.05em;color:#000;background:#fff;
+  border:1px solid #000;border-radius:0;padding:.7em .8em;width:100%;box-sizing:border-box;
+}
+textarea{min-height:7em;resize:vertical}
+input[type="file"]{font-family:"Courier New",Courier,monospace;font-size:10px;width:100%}
+input:focus,textarea:focus{outline:2px solid #000;outline-offset:1px}
+button{
+  appearance:none;font:inherit;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+  background:#fff;color:#000;border:1.5px solid #000;border-radius:0;padding:.9em 1.7em;cursor:pointer;margin-top:1.2em;
+}
+button:hover{background:#000;color:#fff}
+#pic-preview{max-width:200px;display:none;border:1px solid #000;margin-top:.8em}
+#warranty-img{display:block;max-width:460px;width:100%;border:1px solid #000;margin:1.2rem 0}
+.result{white-space:pre-wrap;font-size:10px}
+hr{border:0;border-top:1px solid #000;margin:2.4rem 0 1.2rem}
+h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
+</style>
+</head>
+<body>
+
+<!-- ======================= on top ======================= -->
+<div id="hero">
+  <img id="wordmark" src="wordmark.png" alt="SPLIDGET&trade;">
+  <div id="cta-wrap">
+    <a href="use/video_003_street_use.mp4" target="_blank" rel="noopener">seriously fun</a>
+    <div id="get-one">
+      <button id="get-one-btn" type="button" aria-expanded="false">get one</button>
+      <div id="receipt-row">
+        <div id="r-carousel">
+          <img id="rc-img" src="scans/scan_02_sealed_packet.jpg" alt="splidget in its sealed packaging">
+          <div class="rc-dots">
+            <button class="rc-dot active" type="button" data-i="0" aria-label="packaging"></button>
+            <button class="rc-dot" type="button" data-i="1" aria-label="warranty card"></button>
+          </div>
+        </div>
+        <div id="receipt">
+        <p class="r-order">edition no. <span id="r-order-no"></span></p>
+        <div class="r-line"><span id="r-item-label">splidget</span><span id="r-item-price">&pound;10.00</span></div>
+        <div class="r-line"><span>online charge</span><span>&pound;1.00</span></div>
+        <div class="r-line r-qty">
+          <span>qty</span>
+          <select id="r-qty" aria-label="quantity">
+            <option value="1">1&times;</option>
+            <option value="2">2&times; twin</option>
+          </select>
+        </div>
+        <div class="r-field">
+          <label for="r-country">country <span class="r-approx">(for postage estimate)</span></label>
+          <select id="r-country">
+            <option value="0">united kingdom</option>
+            <option value="3.5">europe</option>
+            <option value="6">north america</option>
+            <option value="8.5">rest of world</option>
+          </select>
+        </div>
+        <div class="r-line r-total"><span>postage</span><span id="r-post">free</span></div>
+        <div class="r-line r-total"><span>total</span><span id="r-total">&pound;11.00</span></div>
+        <p class="r-note">international postage confirmed by email before dispatch. <a href="https://www.royalmail.com/price-finder" target="_blank" rel="noopener">check rates &rarr;</a></p>
+        <button id="pay-now" type="button">pay now</button>
+        <button id="find-stockists" type="button">find stockists</button>
+        <p id="stockists-note" hidden>none yet &mdash; splidget is online-only for now.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= underneath ======================= -->
+<main id="archive">
+  <div class="grid" id="scans">
+    <div class="cell"><img src="scans/forge_01.jpg" alt="scan of splidget forge_01 beside ten pound price cubes"></div>
+    <div class="cell"><img src="scans/forge_02.jpg" alt="scan of splidget forge_02 beside ten pound price cubes"></div>
+    <div class="cell"><img src="scans/forge_03.jpg" alt="scan of splidget forge_03 beside ten pound price cubes"></div>
+    <div class="cell"><img src="scans/forge_04.jpg" loading="lazy" alt="scan of splidget forge_04 beside ten pound price cubes"></div>
+    <div class="cell"><img src="scans/forge_05.jpg" loading="lazy" alt="scan of splidget forge_05 beside ten pound price cubes"></div>
+    <div class="cell"><img src="scans/forge_06.jpg" loading="lazy" alt="scan of splidget forge_06 beside ten pound price cubes"></div>
+    <div class="cell"><img src="scans/forge_09.jpg" loading="lazy" alt="scan of splidget forge_09 beside ten pound price cubes"></div>
+    <div class="cell"><img src="scans/forge_10.jpg" loading="lazy" alt="scan of splidget forge_10 beside ten pound price cubes"></div>
+    <div class="cell"><img src="scans/forge_11.jpg" loading="lazy" alt="scan of splidget forge_11 beside ten pound price cubes"></div>
+    <div class="cell"><img src="scans/forge_12.jpg" loading="lazy" alt="scan of splidget forge_12 beside ten pound price cubes"></div>
+    <div class="cell"><img src="scans/forge_13.jpg" loading="lazy" alt="scan of splidget forge_13 beside ten pound price cubes"></div>
+    <div class="cell"><img src="scans/forge_14.jpg" loading="lazy" alt="scan of splidget forge_14 beside ten pound price cubes"></div>
+    <div class="cell"><img src="scans/forge_15.jpg" loading="lazy" alt="scan of splidget forge_15 beside ten pound price cubes"></div>
+    <div class="cell"><img src="scans/forge_16.jpg" loading="lazy" alt="scan of splidget forge_16 beside ten pound price cubes"></div>
+    <div class="cell"><img src="scans/forge_17.jpg" loading="lazy" alt="scan of splidget forge_17 beside ten pound price cubes"></div>
+  </div>
+</main>
+
+<footer id="site-footer">
+  <nav id="footer-tabs">
+    <button class="f-tab" type="button" data-tab="contact" aria-expanded="false">contact us</button>
+    <button class="f-tab" type="button" data-tab="about" aria-expanded="false">about</button>
+    <button class="f-tab" type="button" data-tab="opportunities" aria-expanded="false">opportunities</button>
+    <button class="f-tab" type="button" data-tab="foundation" aria-expanded="false">foundation</button>
+    <button class="f-tab" type="button" data-tab="authentification" aria-expanded="false">authentification</button>
+  </nav>
+  <div id="footer-panel">
+    <p class="f-panel" data-panel="contact">for stockists, brand and artist collaborations, people who'd like to work with us, and customer feedback &mdash; <a href="mailto:hello@splidget.com">hello@splidget.com</a>.</p>
+    <p class="f-panel" data-panel="about">a splidget is handmade in london. always has been, always will be. each one undergoes intense pressure in its creation and develops unique properties and characteristics due to the external factors during its forging process. every splidget undergoes a specific 7 stage treatment, and every splidget is archived for authentification purposes. the materials are marine-grade and can weather any storm, which is why we confidently extend our 100 year warranty on every splidget.<br><br><strong>modern slavery statement</strong><br>copy coming soon.</p>
+    <p class="f-panel" data-panel="opportunities">copy coming soon.</p>
+    <p class="f-panel" data-panel="foundation">we have a history of supporting artists and raising awareness for the haptics of reality. as our company grows we commit to continuing having a positive impact for the public benefit, and plan to create an official organisation to continue this valued work in an official capacity.</p>
+    <p class="f-panel" data-panel="authentification">every splidget is archived and issued an edition number, checked through a 7 stage verification. <a href="#/authentication">open authentication &rarr;</a></p>
+  </div>
+</footer>
+
+<!-- ======================= /authentication ======================= -->
+<main id="auth-view">
+  <a href="#/"><img class="wm-small" src="wordmark.png" alt="SPLIDGET&trade; — return to index"></a>
+  <h2>authentication/</h2>
+
+  <p class="just">we have a secret that defines us. every splidget is forged with several secret identifiers that verify its originality. just incase someone is clever enough to figure it out &mdash; we have a backup archive of every splidget that is created.</p>
+
+  <img id="warranty-img" src="scans/scan_07_warranty_card.jpg" alt="a splidget warranty card, showing where the order / warranty number is printed">
+
+  <p class="just">enter your edition number below to verify it. if you don't have your card, upload a picture of your splidget instead, or send a message &mdash; we'll check it against the archive by hand.</p>
+
+  <form id="verify-form">
+    <label for="auth-name">name (for our database):</label>
+    <input type="text" id="auth-name" autocomplete="name" style="max-width:20em">
+    <label for="auth-no">edition number:</label>
+    <input type="text" id="auth-no" autocomplete="off" spellcheck="false" placeholder="e.g. E1-7/100" style="max-width:16em">
+    <label for="auth-pic">picture of your splidget (optional):</label>
+    <input type="file" id="auth-pic" accept="image/*">
+    <img id="pic-preview" alt="your uploaded picture of a splidget">
+    <label for="auth-msg">message (optional):</label>
+    <textarea id="auth-msg"></textarea>
+    <br>
+    <button type="submit">verify</button>
+  </form>
+  <p class="result" id="verify-result"></p>
+
+  <p style="margin-top:2.5rem"><a href="#/">return to index</a></p>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- two pages, one hash: the index, and /authentication ---------- */
+  var AUTH_HASHES = { '#/authentication': 1, '#authentication': 1, '#/authentification': 1, '#authentification': 1 };
+  function syncRoute() {
+    var auth = !!AUTH_HASHES[window.location.hash];
+    root.classList.toggle('route-auth', auth);
+    if (auth) window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', syncRoute);
+  syncRoute();
+
+  /* ---------- footer: tabs that expand content inline ---------- */
+  var footerTabs = Array.prototype.slice.call(document.querySelectorAll('.f-tab'));
+  var footerPanel = $('footer-panel');
+  footerTabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var name = tab.getAttribute('data-tab');
+      var wasActive = tab.classList.contains('active');
+      footerTabs.forEach(function (t) { t.classList.remove('active'); t.setAttribute('aria-expanded', 'false'); });
+      document.querySelectorAll('.f-panel').forEach(function (p) { p.classList.remove('active'); });
+      if (wasActive) { footerPanel.classList.remove('open'); return; }
+      tab.classList.add('active');
+      tab.setAttribute('aria-expanded', 'true');
+      var panel = document.querySelector('.f-panel[data-panel="' + name + '"]');
+      if (panel) panel.classList.add('active');
+      footerPanel.classList.add('open');
+    });
+  });
+
+  /* ---------- get one: the button itself expands into a till receipt ---------- */
+  var getOne = $('get-one'), getBtn = $('get-one-btn');
+  var qtySel = $('r-qty'), countrySel = $('r-country');
+  var itemLabel = $('r-item-label'), itemPrice = $('r-item-price'), postEl = $('r-post'), totalEl = $('r-total');
+  var PRICES = { '1': 10, '2': 15.99 };
+
+  // edition no. is minted once per visit and held for the session — it is a display
+  // flourish, not a live edition counter (there is no inventory backend behind it yet).
+  function orderNo() {
+    var key = 'splidgetOrderNo', v = null;
+    try { v = sessionStorage.getItem(key); } catch (e) {}
+    if (!v) {
+      v = 'E1-' + (Math.floor(Math.random() * 100) + 1) + '/100';
+      try { sessionStorage.setItem(key, v); } catch (e) {}
+    }
+    return v;
+  }
+  $('r-order-no').textContent = orderNo();
+
+  function recalcReceipt() {
+    var qty = qtySel.value;
+    var post = parseFloat(countrySel.value) || 0;
+    itemLabel.textContent = qty === '2' ? 'splidget (twin pack)' : 'splidget';
+    itemPrice.textContent = '£' + PRICES[qty].toFixed(2);
+    postEl.textContent = post === 0 ? 'free' : '£' + post.toFixed(2) + ' (est.)';
+    totalEl.textContent = '£' + (PRICES[qty] + 1 + post).toFixed(2);
+  }
+  getBtn.addEventListener('click', function () {
+    var open = getOne.classList.toggle('open');
+    getBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  /* ---------- get one: carousel of the packaging and the warranty card ---------- */
+  var rcImages = [
+    { src: 'scans/scan_02_sealed_packet.jpg', alt: 'splidget in its sealed packaging' },
+    { src: 'scans/scan_07_warranty_card.jpg', alt: 'splidget warranty card' }
+  ];
+  var rcImg = $('rc-img');
+  var rcDots = Array.prototype.slice.call(document.querySelectorAll('.rc-dot'));
+  rcDots.forEach(function (dot) {
+    dot.addEventListener('click', function () {
+      var i = +dot.getAttribute('data-i');
+      rcImg.src = rcImages[i].src;
+      rcImg.alt = rcImages[i].alt;
+      rcDots.forEach(function (d) { d.classList.remove('active'); });
+      dot.classList.add('active');
+    });
+  });
+
+  qtySel.addEventListener('change', recalcReceipt);
+  countrySel.addEventListener('change', recalcReceipt);
+  recalcReceipt();
+  $('pay-now').addEventListener('click', function () {
+    // the edition number is passed through as client_reference_id so it shows up
+    // against the payment in the stripe dashboard.
+    var ref = encodeURIComponent($('r-order-no').textContent || '');
+    window.open('https://buy.stripe.com/14A9AMdOK4U12Infom6Vq00?client_reference_id=' + ref, '_blank', 'noopener');
+  });
+  $('find-stockists').addEventListener('click', function () {
+    $('stockists-note').hidden = !$('stockists-note').hidden;
+  });
+
+  /* ---------- authentification: edition number, picture and/or message, one desk ---------- */
+  // set MSG_ENDPOINT to a form endpoint (e.g. formspree) to make the desk live; until then
+  // the form says plainly that nothing has been sent.
+  var MSG_ENDPOINT = '';
+  var verifyForm = $('verify-form'), authName = $('auth-name'), authNo = $('auth-no'), authPic = $('auth-pic'),
+      authMsg = $('auth-msg'), picPreview = $('pic-preview'), verifyResult = $('verify-result');
+
+  authPic.addEventListener('change', function () {
+    var f = authPic.files && authPic.files[0];
+    if (!f) { picPreview.style.display = 'none'; return; }
+    picPreview.src = URL.createObjectURL(f);
+    picPreview.style.display = 'block';
+  });
+
+  verifyForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = authName.value.trim();
+    var raw = authNo.value.replace(/\s/g, '');
+    var f = authPic.files && authPic.files[0];
+    var msg = authMsg.value.trim();
+    var lines = [];
+
+    if (!name && !raw && !f && !msg) { verifyResult.textContent = 'enter a name, an edition number, a picture, or a message.'; return; }
+
+    if (name) lines.push(name + ' added to the database.');
+    if (raw) {
+      var looksRight = /^E\d+-\d{1,3}\/100$/i.test(raw) || /^\d{6,10}$/.test(raw);
+      lines.push(looksRight
+        ? raw + ' corresponds to a splidget™ — checked through our 7 stage process and archived on the way out.'
+        : 'that doesn’t look like an order or warranty number.');
+    }
+    if (f) lines.push('picture received: ' + f.name + '.');
+    if (msg) lines.push('message received.');
+    if (f || msg) {
+      lines.push(MSG_ENDPOINT
+        ? 'the 7 points will be checked against the archive by hand — we will reply.'
+        : '( nothing is actually sent yet — the inspection desk is not connected. )');
+    }
+    verifyResult.textContent = lines.join('\n');
+  });
+})();
+</script>
+</body>
+</html>
