@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Splidget</title>
 <meta name="description" content="splidget.com — the original splidget. handmade in london. seriously fun.">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700&family=Space+Mono:wght@400;700&family=Michroma&display=swap" rel="stylesheet">
 <style>
 /* splidget.com — two websites on top of each other.
    Underneath: six scanner scans, three across, three below. Nothing else.
@@ -56,6 +56,17 @@ p{margin:.8em 0}
 }
 #cta-wrap>a{text-decoration:none;border:1.5px solid #000;background:#fff;padding:.9em 1.7em;display:inline-block}
 #cta-wrap>a:hover{background:#000;color:#fff}
+#irl-btn{font:inherit;letter-spacing:inherit;font-weight:inherit;text-transform:inherit;
+  border:1.5px solid #000;background:#fff;padding:.9em 1.7em;display:inline-block;cursor:pointer;color:#000}
+#irl-btn:hover,#irl-btn.active{background:#000;color:#fff}
+body.irl-mode,body.irl-mode *{cursor:none!important}
+#irl-cursor{
+  position:fixed;top:0;left:0;z-index:9999;pointer-events:none;display:none;
+  font-family:"Michroma","Archivo","Helvetica Neue",Arial,sans-serif;
+  font-weight:700;font-size:clamp(42px,11vw,150px);letter-spacing:.03em;
+  color:#000;transform:translate(-50%,-50%);white-space:nowrap;user-select:none;
+}
+body.irl-mode #irl-cursor{display:block}
 
 /* ---------- get one: the button box itself expands into a till receipt ---------- */
 #get-one{width:128px;background:#fff;border:1.5px solid #000;box-shadow:0 10px 24px rgba(0,0,0,.14)}
@@ -91,6 +102,13 @@ p{margin:.8em 0}
   padding:.15em .3em;border-radius:0;line-height:1.5;
 }
 .r-approx{opacity:.7;font-weight:400}
+.r-line-info{position:relative}
+.r-info{display:inline-block;width:1.15em;height:1.15em;line-height:1.05em;text-align:center;border:1px solid #000;
+  border-radius:50%;background:#fff;font:inherit;font-size:7px;cursor:pointer;padding:0;margin-left:.3em;vertical-align:middle}
+.r-info:hover,.r-info[aria-expanded="true"]{background:#000;color:#fff}
+.r-tip{display:none;position:absolute;left:0;right:0;top:100%;z-index:5;font-size:6.8px;opacity:.9;line-height:1.7;
+  margin:.15em 0 0;padding:.4em .5em;border:1px solid #000;background:#fafafa;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.r-tip.open{display:block}
 .r-total{border-bottom:none;border-top:1px solid #000;margin-top:.5em;padding-top:.5em;font-weight:700}
 .r-note{font-size:7.1px;opacity:.6;margin:.6em 0 0;line-height:1.6}
 .r-note a{text-decoration:underline}
@@ -136,7 +154,7 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
 <div id="hero">
   <img id="wordmark" src="wordmark.png" alt="SPLIDGET&trade;">
   <div id="cta-wrap">
-    <a href="use/video_003_street_use.mp4" target="_blank" rel="noopener">seriously fun</a>
+    <button id="irl-btn" type="button" aria-pressed="false">seriously fun</button>
     <div id="get-one">
       <button id="get-one-btn" type="button" aria-expanded="false">get one</button>
       <div id="receipt-row">
@@ -150,7 +168,8 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
         <div id="receipt">
         <p class="r-order">edition no. <span id="r-order-no"></span></p>
         <div class="r-line"><span id="r-item-label">splidget</span><span id="r-item-price">&pound;10.00</span></div>
-        <div class="r-line"><span>online charge</span><span>&pound;1.00</span></div>
+        <div class="r-line r-line-info"><span>online charge <button class="r-info" type="button" aria-expanded="false" aria-label="why an online charge?">?</button></span><span>&pound;1.00</span>
+        <p class="r-tip" id="r-tip">splidget&trade; is about, promoting the haptics of reality. to embody that, we charge &pound;1, for forcing our screentime. but we got you back with free postage to the uk and ireland.</p></div>
         <div class="r-line r-qty">
           <span>qty</span>
           <select id="r-qty" aria-label="quantity">
@@ -179,6 +198,8 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
   </div>
 </div>
 
+<div id="irl-cursor" aria-hidden="true">IRL</div>
+
 <!-- ======================= underneath ======================= -->
 <main id="archive">
   <div class="grid" id="scans">
@@ -205,14 +226,25 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
     <button class="f-tab" type="button" data-tab="contact" aria-expanded="false">contact us</button>
     <button class="f-tab" type="button" data-tab="about" aria-expanded="false">about</button>
     <button class="f-tab" type="button" data-tab="opportunities" aria-expanded="false">opportunities</button>
-    <button class="f-tab" type="button" data-tab="foundation" aria-expanded="false">foundation</button>
+    <button class="f-tab" type="button" data-tab="foundation" aria-expanded="false">links</button>
     <button class="f-tab" type="button" data-tab="authentification" aria-expanded="false">authentification</button>
   </nav>
   <div id="footer-panel">
-    <p class="f-panel" data-panel="contact">for stockists, brand and artist collaborations, people who'd like to work with us, and customer feedback &mdash; <a href="mailto:hello@splidget.com">hello@splidget.com</a>.</p>
-    <p class="f-panel" data-panel="about">a splidget is handmade in london. always has been, always will be. each one undergoes intense pressure in its creation and develops unique properties and characteristics due to the external factors during its forging process. every splidget undergoes a specific 7 stage treatment, and every splidget is archived for authentification purposes. the materials are marine-grade and can weather any storm, which is why we confidently extend our 100 year warranty on every splidget.<br><br><strong>modern slavery statement</strong><br>copy coming soon.</p>
-    <p class="f-panel" data-panel="opportunities">copy coming soon.</p>
-    <p class="f-panel" data-panel="foundation">we have a history of supporting artists and raising awareness for the haptics of reality. as our company grows we commit to continuing having a positive impact for the public benefit, and plan to create an official organisation to continue this valued work in an official capacity.</p>
+    <p class="f-panel" data-panel="contact">get in touch, about stocking splidget, branding/artist collabration, customer feedback, or just to say hello &mdash; <a href="mailto:hello@splidget.com">hello@splidget.com</a>.</p>
+    <div class="f-panel" data-panel="about">
+      <p class="just">splidget&trade; is not a toy. it's very serious,</p>
+      <p><strong>it's like a phone.</strong></p>
+      <p class="just">a splidget is an inspirational device you can look at when you're bored, you can use it for play, to send signals, and if two or more people have a splidget they can have a conversation.</p>
+      <p><strong>it's not for everyone</strong></p>
+      <p class="just">some people say splidget is dangerous, and not safe for children, but we made sure it's really tough so it won't break into small parts. it's made from steel and aluminium. it's not a baby toy. it's for adults and tough kids.</p>
+      <p><strong>there are several moves that can be done with the splidget. these include:</strong></p>
+      <p class="just">the rainstick slide &middot; the classic flick + spin + fall &middot; the fingertip orbit &middot; the worm bead squirm &middot; the "hang loose" rattle &middot; the s-loop state &middot; the middle man manouvre</p>
+      <p class="just">advanced use can bring calisthenics to the fingertips and helps direct focus and energy there. doublehanded implies control.</p>
+      <p>each one is unique.</p>
+      <p><strong>do not get competitive.</strong></p>
+    </div>
+    <p class="f-panel" data-panel="opportunities">want to work with us? send us a cv &mdash; <a href="mailto:hello@splidget.com">hello@splidget.com</a>.</p>
+    <p class="f-panel" data-panel="foundation"><a href="https://splidget.local.forum" target="_blank" rel="noopener">splidget.local.forum</a> &mdash; password: splidget</p>
     <p class="f-panel" data-panel="authentification">every splidget is archived and issued an edition number, checked through a 7 stage verification. <a href="#/authentication">open authentication &rarr;</a></p>
   </div>
 </footer>
@@ -223,6 +255,8 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
   <h2>authentication/</h2>
 
   <p class="just">we have a secret that defines us. every splidget is forged with several secret identifiers that verify its originality. just incase someone is clever enough to figure it out &mdash; we have a backup archive of every splidget that is created.</p>
+
+  <p class="just">a splidget is handmade in london. always has been, always will be. each one undergoes intense pressure in its creation and develops unique properties and characteristics due to the external factors during its forging process. every authentic splidget undergoes a specific treatment, and is archived for authentification purposes. the materials are marine-grade and can weather any storm, which is why we confidently extend our 100 year warranty on every splidget. <a href="#archive">click the link to find out more &rarr;</a></p>
 
   <img id="warranty-img" src="scans/scan_07_warranty_card.jpg" alt="a splidget warranty card, showing where the order / warranty number is printed">
 
@@ -280,24 +314,86 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
     });
   });
 
+  /* ---------- seriously fun: cursor becomes a giant "IRL" ---------- */
+  var irlBtn = $('irl-btn'), irlCursor = $('irl-cursor'), irlActive = false;
+
+  function irlMove(x, y) {
+    irlCursor.style.left = x + 'px';
+    irlCursor.style.top = y + 'px';
+  }
+  function irlOn(x, y) {
+    irlActive = true;
+    document.body.classList.add('irl-mode');
+    irlBtn.classList.add('active');
+    irlBtn.setAttribute('aria-pressed', 'true');
+    if (typeof x === 'number') irlMove(x, y);
+  }
+  function irlOff() {
+    irlActive = false;
+    document.body.classList.remove('irl-mode');
+    irlBtn.classList.remove('active');
+    irlBtn.setAttribute('aria-pressed', 'false');
+  }
+
+  // desktop / mouse: click to toggle on, mouse follows, click again to stop
+  var irlSuppressClick = false;
+  irlBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (irlSuppressClick) return;
+    if (irlActive) { irlOff(); return; }
+    irlOn(e.clientX, e.clientY);
+  });
+  document.addEventListener('mousemove', function (e) {
+    if (irlActive) irlMove(e.clientX, e.clientY);
+  });
+  document.addEventListener('click', function (e) {
+    if (irlActive && e.target !== irlBtn) irlOff();
+  });
+
+  // touch: press and hold on the button, drag while held, release to stop
+  var irlHoldTimer = null, irlHolding = false;
+  irlBtn.addEventListener('touchstart', function (e) {
+    e.preventDefault(); // stop the trailing synthetic "click" a tap would otherwise fire
+    var t = e.touches[0];
+    irlHoldTimer = setTimeout(function () {
+      irlHolding = true;
+      irlOn(t.clientX, t.clientY);
+    }, 350);
+  }, { passive: false });
+  irlBtn.addEventListener('touchmove', function (e) {
+    if (irlHolding) {
+      e.preventDefault();
+      var t = e.touches[0];
+      irlMove(t.clientX, t.clientY);
+    }
+  }, { passive: false });
+  function irlTouchEnd() {
+    clearTimeout(irlHoldTimer);
+    if (irlHolding) {
+      irlHolding = false;
+      irlOff();
+      irlSuppressClick = true;
+      setTimeout(function () { irlSuppressClick = false; }, 400);
+    }
+  }
+  irlBtn.addEventListener('touchend', irlTouchEnd);
+  irlBtn.addEventListener('touchcancel', irlTouchEnd);
+
   /* ---------- get one: the button itself expands into a till receipt ---------- */
   var getOne = $('get-one'), getBtn = $('get-one-btn');
   var qtySel = $('r-qty'), countrySel = $('r-country');
   var itemLabel = $('r-item-label'), itemPrice = $('r-item-price'), postEl = $('r-post'), totalEl = $('r-total');
   var PRICES = { '1': 10, '2': 15.99 };
 
-  // edition no. is minted once per visit and held for the session — it is a display
-  // flourish, not a live edition counter (there is no inventory backend behind it yet).
-  function orderNo() {
-    var key = 'splidgetOrderNo', v = null;
-    try { v = sessionStorage.getItem(key); } catch (e) {}
-    if (!v) {
-      v = 'E1-' + (Math.floor(Math.random() * 100) + 1) + '/100';
-      try { sessionStorage.setItem(key, v); } catch (e) {}
-    }
-    return v;
-  }
-  $('r-order-no').textContent = orderNo();
+  // edition no. — real, live count, read from /api/edition (backed by a counter
+  // that ticks DOWN by one on every confirmed stripe payment, never sold out,
+  // never blocks a purchase). if /api/edition isn't reachable — e.g. this page
+  // previewed outside the deployed site, with no backend behind it — falls
+  // back to a static E1-100/100 rather than showing nothing.
+  $('r-order-no').textContent = 'E1-100/100';
+  fetch('/api/edition').then(function (r) { return r.json(); }).then(function (d) {
+    if (typeof d.count === 'number') $('r-order-no').textContent = 'E1-' + d.count + '/100';
+  }).catch(function () {});
 
   function recalcReceipt() {
     var qty = qtySel.value;
@@ -310,6 +406,21 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
   getBtn.addEventListener('click', function () {
     var open = getOne.classList.toggle('open');
     getBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  /* ---------- get one: the "?" on online charge, hover or tap ---------- */
+  var infoBtn = $('r-info') || document.querySelector('.r-info'), tip = $('r-tip');
+  function showTip() { tip.classList.add('open'); infoBtn.setAttribute('aria-expanded', 'true'); }
+  function hideTip() { tip.classList.remove('open'); infoBtn.setAttribute('aria-expanded', 'false'); }
+  infoBtn.addEventListener('mouseenter', showTip);
+  infoBtn.addEventListener('mouseleave', hideTip);
+  infoBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    showTip();
+  });
+  document.addEventListener('click', function (e) {
+    if (tip.classList.contains('open') && e.target !== infoBtn && !tip.contains(e.target)) hideTip();
   });
 
   /* ---------- get one: carousel of the packaging and the warranty card ---------- */

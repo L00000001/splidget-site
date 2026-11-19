@@ -1,0 +1,9 @@
+{
+  "name": "splidget-site",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@vercel/kv": "^1.0.1",
+    "stripe": "^14.25.0"
+  }
+}
