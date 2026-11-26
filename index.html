@@ -69,56 +69,59 @@ body.irl-mode,body.irl-mode *{cursor:none!important}
 body.irl-mode #irl-cursor{display:block}
 
 /* ---------- get one: the button box itself expands into a till receipt ---------- */
-#get-one{width:128px;background:#fff;border:1.5px solid #000;box-shadow:0 10px 24px rgba(0,0,0,.14)}
-#get-one.open{width:min(94vw,380px)}
+#get-one{width:128px;background:#fff;border:none;box-shadow:0 10px 24px rgba(0,0,0,.14)}
+#get-one.open{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(94vw,540px);max-height:92vh;overflow-y:auto;z-index:20;box-shadow:0 18px 48px rgba(0,0,0,.28)}
 #get-one-btn{
   display:block;width:100%;margin:0;border:none;background:#fff;padding:.9em 0;
   font:inherit;letter-spacing:.22em;font-weight:700;text-transform:uppercase;cursor:pointer;
 }
 #get-one-btn:hover{background:#000;color:#fff}
-#get-one.open #get-one-btn{border-bottom:1px solid #000}
-#receipt-row{display:none}
+#get-one-btn .go-open{display:none}
+#get-one.open #get-one-btn .go-closed{display:none}
+#get-one.open #get-one-btn .go-open{display:inline}
+#get-one.open #get-one-btn{padding:1.1em 0}
+#receipt-row{display:none;min-height:470px}
 #get-one.open #receipt-row{display:flex;align-items:stretch}
-#r-carousel{flex:0 0 34%;max-width:34%;border-right:1px solid #000;display:flex;flex-direction:column}
-#rc-img{display:block;width:100%;flex:1;min-height:0;object-fit:cover;background:#eee}
-.rc-dots{display:flex;justify-content:center;gap:.4em;padding:.4em 0;border-top:1px solid #000}
-.rc-dot{width:6px;height:6px;border-radius:50%;border:1px solid #000;background:#fff;padding:0;cursor:pointer}
+#r-carousel{flex:0 0 34%;max-width:34%;border-right:none;display:flex;flex-direction:column;padding:2.2em 1.4em 1.6em;box-sizing:border-box}
+#rc-img{display:block;width:100%;flex:1;min-height:0;object-fit:cover;background:transparent;box-shadow:none}
+.rc-dots{display:flex;justify-content:center;gap:.5em;padding:1.2em 0 0}
+.rc-dot{width:6px;height:6px;border-radius:50%;border:none;background:#cfcfcf;padding:0;cursor:pointer}
 .rc-dot.active{background:#000}
 @media (max-width:480px){
   #get-one.open #receipt-row{flex-direction:column}
-  #r-carousel{flex:0 0 auto;max-width:100%;border-right:none;border-bottom:1px solid #000}
+  #r-carousel{flex:0 0 auto;max-width:100%;border-right:none;padding:1.4em 1.4em 1em}
   #rc-img{height:110px;flex:none}
 }
-#receipt{flex:1;min-width:0;padding:.75em .65em .95em;text-align:left;
-  font-family:"Space Mono","Courier New",Courier,monospace;font-size:8.3px;letter-spacing:.05em;line-height:1.75}
-.r-order{text-align:center;font-weight:700;margin:0 0 .65em;letter-spacing:.04em}
-.r-line{display:flex;justify-content:space-between;gap:.5em;padding:.25em 0}
+#receipt{flex:1;min-width:0;padding:2.6em 2.4em 2.6em;text-align:left;
+  font-family:"Space Mono","Courier New",Courier,monospace;font-size:8.3px;letter-spacing:.05em;line-height:2}
+.r-order{text-align:center;font-weight:700;margin:0 0 1.3em;letter-spacing:.04em}
+.r-line{display:flex;justify-content:space-between;gap:.8em;padding:.9em 0}
 .r-qty{align-items:center}
-.r-qty select{font:inherit;font-size:8.3px;border:1px solid #000;background:#fff;padding:.2em .2em}
-.r-field{margin:.4em 0 0}
-.r-field label{display:block;font-size:7.3px;letter-spacing:.09em;opacity:.65;margin:0 0 .15em}
+.r-qty select{font:inherit;font-size:8.3px;border:none;background:#f1f1f1;padding:.3em .4em}
+.r-field{margin:1em 0 0}
+.r-field label{display:block;font-size:7.3px;letter-spacing:.09em;opacity:.65;margin:0 0 .45em}
 .r-field input,.r-field select{
-  width:100%;box-sizing:border-box;font:inherit;font-size:8.3px;border:1px solid #000;background:#fff;
+  width:100%;box-sizing:border-box;font:inherit;font-size:8.3px;border:none;background:#f1f1f1;
   padding:.15em .3em;border-radius:0;line-height:1.5;
 }
 .r-approx{opacity:.7;font-weight:400}
 .r-line-info{position:relative}
-.r-info{display:inline-block;width:1.15em;height:1.15em;line-height:1.05em;text-align:center;border:1px solid #000;
-  border-radius:50%;background:#fff;font:inherit;font-size:7px;cursor:pointer;padding:0;margin-left:.3em;vertical-align:middle}
-.r-info:hover,.r-info[aria-expanded="true"]{background:#000;color:#fff}
+.r-info{display:inline-block;background:none;border:none;padding:0 0 0 .35em;margin:0;cursor:pointer;
+  font-family:"Archivo","Helvetica Neue",Arial,sans-serif;font-size:9px;font-weight:700;line-height:1;color:#000;opacity:.7;vertical-align:middle}
+.r-info:hover,.r-info[aria-expanded="true"]{opacity:1;text-decoration:underline}
 .r-tip{display:none;position:absolute;left:0;right:0;top:100%;z-index:5;font-size:6.8px;opacity:.9;line-height:1.7;
-  margin:.15em 0 0;padding:.4em .5em;border:1px solid #000;background:#fafafa;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+  margin:.15em 0 0;padding:.6em .7em;border:none;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.15)}
 .r-tip.open{display:block}
-.r-total{border-bottom:none;border-top:1px solid #000;margin-top:.5em;padding-top:.5em;font-weight:700}
-.r-note{font-size:7.1px;opacity:.6;margin:.6em 0 0;line-height:1.6}
+.r-total{border:none;margin-top:.9em;padding-top:.9em;font-weight:700}
+.r-note{font-size:7.1px;opacity:.6;margin:1.3em 0 0;line-height:1.8}
 .r-note a{text-decoration:underline}
 #pay-now{
-  display:block;width:100%;margin:.8em 0 0;border:1.5px solid #000;background:#000;color:#fff;
+  display:block;width:100%;margin:1.7em 0 0;border:none;background:#000;color:#fff;
   padding:.65em 0;font-family:inherit;font-weight:700;font-size:8.6px;letter-spacing:.12em;
   text-transform:uppercase;cursor:pointer;
 }
 #pay-now:hover{background:#fff;color:#000}
-#find-stockists{display:block;width:100%;margin:.55em 0 0;border:none;background:none;color:#000;
+#find-stockists{display:block;width:100%;margin:1.1em 0 0;border:none;background:none;color:#000;
   font-family:inherit;font-size:7.3px;letter-spacing:.1em;text-decoration:underline;cursor:pointer;padding:0;text-transform:uppercase}
 #stockists-note{font-size:7px;opacity:.65;margin:.4em 0 0;line-height:1.5;text-align:center}
 
@@ -189,7 +192,7 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
   <div id="cta-wrap">
     <button id="irl-btn" type="button" aria-pressed="false">seriously fun</button>
     <div id="get-one">
-      <button id="get-one-btn" type="button" aria-expanded="false">get one</button>
+      <button id="get-one-btn" type="button" aria-expanded="false"><span class="go-closed">get one</span><span class="go-open">order summary</span></button>
       <div id="receipt-row">
         <div id="r-carousel">
           <img id="rc-img" src="scans/scan_02_sealed_packet.jpg" alt="splidget in its sealed packaging">
@@ -222,7 +225,7 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
         <div class="r-line r-total"><span>postage</span><span id="r-post">free</span></div>
         <div class="r-line r-total"><span>total</span><span id="r-total">&pound;11.00</span></div>
         <p class="r-note">international postage confirmed by email before dispatch. <a href="https://www.royalmail.com/price-finder" target="_blank" rel="noopener">check rates &rarr;</a></p>
-        <button id="pay-now" type="button">pay now</button>
+        <button id="pay-now" type="button">payment</button>
         <button id="find-stockists" type="button">find stockists</button>
         <p id="stockists-note" hidden>none yet &mdash; splidget is online-only for now.</p>
         </div>
