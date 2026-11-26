@@ -148,9 +148,11 @@ hr{border:0;border-top:1px solid #000;margin:2.4rem 0 1.2rem}
 h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
 /* ---------- christmas: hat on the s, hover microtext + countdown ---------- */
 #wm-wrap{position:relative;display:inline-block;pointer-events:auto}
-#xmas-hat{position:absolute;left:2%;top:-8%;width:10%;height:auto;z-index:2;pointer-events:auto;cursor:pointer;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-#xmas-note{display:none;position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:.9em;
-  white-space:nowrap;font-size:6px;letter-spacing:.16em;line-height:1.4;text-transform:uppercase;font-weight:400}
+#xmas-hat{position:absolute;left:-3%;top:-44%;width:10%;height:auto;z-index:2;pointer-events:auto;cursor:pointer;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#xmas-note{display:none;position:fixed;left:0;top:0;transform:translate(-50%,-100%);z-index:10;pointer-events:none;
+  white-space:nowrap;text-align:center;color:#d61f1f;font-size:7px;letter-spacing:.16em;line-height:1.5;text-transform:uppercase;font-weight:400}
+#xmas-note .xn-line{display:block}
+#xmas-count{display:block;margin-top:.3em;font-variant-numeric:tabular-nums}
 #xmas-note.show{display:block}
 </style>
 <script type="application/ld+json">
@@ -182,7 +184,7 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
   <div id="wm-wrap">
     <img id="wordmark" src="wordmark.png" alt="SPLIDGET&trade;">
     <img id="xmas-hat" src="hat.png" alt="" aria-hidden="true">
-    <span id="xmas-note">order now for christmas delivery &middot; <span id="xmas-count"></span></span>
+    <span id="xmas-note"><span class="xn-line">order now for</span><span class="xn-line">christmas delivery</span><span id="xmas-count">00:00:00:00</span></span>
   </div>
   <div id="cta-wrap">
     <button id="irl-btn" type="button" aria-pressed="false">seriously fun</button>
@@ -539,19 +541,31 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
     var s = Math.floor(ms / 1000);
     var d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600),
         m = Math.floor((s % 3600) / 60), sec = s % 60;
-    xmasCount.textContent = d + 'd ' + pad2(h) + 'h ' + pad2(m) + 'm ' + pad2(sec) + 's';
+    xmasCount.textContent = pad2(d) + ':' + pad2(h) + ':' + pad2(m) + ':' + pad2(sec);
   }
   xmasTick();
   xmasTimer = setInterval(xmasTick, 1000);
 
-  // hold the hat to reveal the message; let go to hide it
+  // hold the hat to reveal the message; the message follows the pointer or finger until let go
   var xmasHat = $('xmas-hat');
-  function xmasShow(e) { if (xmasNote.style.display !== 'none') xmasNote.classList.add('show'); }
+  function xmasPlace(x, y) {
+    xmasNote.style.left = x + 'px';
+    xmasNote.style.top = (y - 22) + 'px';
+  }
+  xmasHat.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    if (xmasNote.style.display === 'none') return;
+    xmasHat.setPointerCapture(e.pointerId);
+    xmasNote.classList.add('show');
+    xmasPlace(e.clientX, e.clientY);
+  });
+  xmasHat.addEventListener('pointermove', function (e) {
+    if (xmasNote.classList.contains('show')) xmasPlace(e.clientX, e.clientY);
+  });
   function xmasHide() { xmasNote.classList.remove('show'); }
-  xmasHat.addEventListener('pointerdown', function (e) { e.preventDefault(); xmasShow(e); });
   xmasHat.addEventListener('pointerup', xmasHide);
-  xmasHat.addEventListener('pointerleave', xmasHide);
   xmasHat.addEventListener('pointercancel', xmasHide);
+  xmasHat.addEventListener('lostpointercapture', xmasHide);
   xmasHat.addEventListener('contextmenu', function (e) { e.preventDefault(); });
   xmasHat.addEventListener('dragstart', function (e) { e.preventDefault(); });
 })();
