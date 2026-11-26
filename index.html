@@ -121,14 +121,20 @@ body.irl-mode #irl-cursor{display:block}
   text-transform:uppercase;cursor:pointer;
 }
 #pay-now:hover{background:#fff;color:#000}
-#find-stockists{display:block;width:100%;margin:1.1em 0 0;border:none;background:none;color:#000;
-  font-family:inherit;font-size:7.3px;letter-spacing:.1em;text-decoration:underline;cursor:pointer;padding:0;text-transform:uppercase}
-#stockists-note{font-size:8px;margin:1.2em 0 0;line-height:1.8;text-align:center;letter-spacing:.12em}
-#stockists-note p{margin:0}
-#stockists-note .st-name{font-weight:700;margin-bottom:.4em}
-.st-ig{display:inline-block;margin-top:1em;color:#000;text-decoration:none;padding:.3em}
-.st-ig svg{display:block;width:18px;height:18px}
-
+.links-head{font-weight:700;letter-spacing:.2em;margin:0 0 .8em}
+.social{display:flex;justify-content:center;gap:1.8em;margin:0}
+.social a{color:#000;opacity:.7;background:none;text-decoration:none;padding:.2em;transition:opacity .2s}
+.social a:hover{opacity:1;background:none;color:#000}
+.social svg{display:block;width:16px;height:16px}
+.social img{display:block;height:18px;width:auto}
+.st-ig:hover{background:none;color:#000}
+.st-block{margin-top:2.4em;text-align:center;line-height:1.8;letter-spacing:.12em}
+.st-block p{margin:0}
+.st-block .st-head{font-weight:700;letter-spacing:.2em;margin-bottom:1.2em}
+.st-block .st-name{font-weight:700;margin-bottom:.4em}
+.st-ig{display:inline-block;margin-top:.9em;color:#000;opacity:.5;text-decoration:none;padding:.2em;transition:opacity .2s}
+.st-ig:hover{opacity:1}
+.st-ig svg{display:block;width:13px;height:13px}
 /* ---------- /authentication ---------- */
 #auth-view{display:none;position:relative;z-index:1;max-width:42rem;margin:0 auto;padding:1.4rem 1.4rem 6rem}
 .route-auth #hero,.route-auth #archive{display:none}
@@ -230,18 +236,6 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
         <div class="r-line r-total"><span>total</span><span id="r-total">&pound;11.00</span></div>
         <p class="r-note">international postage confirmed by email before dispatch. <a href="https://www.royalmail.com/price-finder" target="_blank" rel="noopener">check rates &rarr;</a></p>
         <button id="pay-now" type="button">payment</button>
-        <button id="find-stockists" type="button">find stockists</button>
-        <div id="stockists-note" hidden>
-          <p class="st-name">kiosk bookshop</p>
-          <p class="st-addr">exmouth market<br>islington<br>london<br>EC1R 4QP</p>
-          <a class="st-ig" href="https://www.instagram.com/kiosk.bookshop/" target="_blank" rel="noopener" aria-label="kiosk bookshop on instagram">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-              <rect x="3" y="3" width="18" height="18" rx="5"/>
-              <circle cx="12" cy="12" r="4"/>
-              <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
-            </svg>
-          </a>
-        </div>
         </div>
       </div>
     </div>
@@ -294,7 +288,33 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
       <p><strong>do not get competitive.</strong></p>
     </div>
     <p class="f-panel" data-panel="opportunities">want to work with us? send us a cv &mdash; <a href="mailto:hello@splidget.com">hello@splidget.com</a>.</p>
-    <p class="f-panel" data-panel="foundation"><a href="https://splidget.local.forum" target="_blank" rel="noopener">splidget.local.forum</a></p>
+    <div class="f-panel" data-panel="foundation">
+      <p class="links-head">social media</p>
+      <div class="social">
+        <a href="https://splidget.local.forum" target="_blank" rel="noopener" aria-label="local.forum">
+          <img src="local-forum.png" alt="" aria-hidden="true">
+        </a>
+        <a href="https://www.instagram.com/splidget.clips/" target="_blank" rel="noopener" aria-label="splidget on instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+      </div>
+      <div class="st-block">
+        <p class="st-head">stockists</p>
+        <p class="st-name">kiosk bookshop</p>
+        <p class="st-addr">exmouth market<br>islington<br>london<br>EC1R 4QP</p>
+        <a class="st-ig" href="https://www.instagram.com/kiosk.bookshop/" target="_blank" rel="noopener" aria-label="kiosk bookshop on instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+      </div>
+    </div>
     <p class="f-panel" data-panel="authentification">every splidget is archived and issued an edition number, checked through a 7 stage verification. <a href="#/authentication">open authentication &rarr;</a></p>
   </div>
 </footer>
@@ -498,9 +518,6 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
     // against the payment in the stripe dashboard.
     var ref = encodeURIComponent($('r-order-no').textContent || '');
     window.open('https://buy.stripe.com/14A9AMdOK4U12Infom6Vq00?client_reference_id=' + ref, '_blank', 'noopener');
-  });
-  $('find-stockists').addEventListener('click', function () {
-    $('stockists-note').hidden = !$('stockists-note').hidden;
   });
 
   /* ---------- authentification: edition number, picture and/or message, one desk ---------- */
