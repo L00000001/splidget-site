@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Splidget</title>
-<meta name="description" content="splidget.com — the original splidget. handmade in london. seriously fun.">
+<title>Splidget | Springy Steel Fidget Toy</title>
+<meta name="description" content="Splidget is a springy braided steel fidget toy with a sliding aluminium bead. Original, one of a kind. £10, free UK postage.">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700&family=Space+Mono:wght@400;700&family=Michroma&display=swap" rel="stylesheet">
 <style>
 /* splidget.com — two websites on top of each other.
@@ -146,13 +146,44 @@ button:hover{background:#000;color:#fff}
 .result{white-space:pre-wrap;font-size:10px}
 hr{border:0;border-top:1px solid #000;margin:2.4rem 0 1.2rem}
 h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
+/* ---------- christmas: hat on the s, hover microtext + countdown ---------- */
+#wm-wrap{position:relative;display:inline-block;pointer-events:auto}
+#xmas-hat{position:absolute;left:1%;top:-14%;width:16%;height:auto;pointer-events:auto;cursor:pointer;mix-blend-mode:multiply;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#xmas-note{display:none;position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:.9em;
+  white-space:nowrap;font-size:6px;letter-spacing:.16em;line-height:1.4;text-transform:uppercase;font-weight:400}
+#xmas-note.show{display:block}
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Splidget",
+  "description": "A springy braided steel fidget toy with a sliding aluminium bead. Original, one of a kind.",
+  "brand": { "@type": "Brand", "name": "Splidget" },
+  "offers": {
+    "@type": "Offer",
+    "price": "10.00",
+    "priceCurrency": "GBP",
+    "availability": "https://schema.org/InStock",
+    "url": "https://www.splidget.com",
+    "shippingDetails": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": { "@type": "MonetaryAmount", "value": "0", "currency": "GBP" },
+      "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "GB" }
+    }
+  }
+}
+</script>
 </head>
 <body>
 
 <!-- ======================= on top ======================= -->
 <div id="hero">
-  <img id="wordmark" src="wordmark.png" alt="SPLIDGET&trade;">
+  <div id="wm-wrap">
+    <img id="wordmark" src="wordmark.png" alt="SPLIDGET&trade;">
+    <img id="xmas-hat" src="hat.png" alt="" aria-hidden="true">
+    <span id="xmas-note">order now for christmas delivery &middot; <span id="xmas-count"></span></span>
+  </div>
   <div id="cta-wrap">
     <button id="irl-btn" type="button" aria-pressed="false">seriously fun</button>
     <div id="get-one">
@@ -244,7 +275,7 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
       <p><strong>do not get competitive.</strong></p>
     </div>
     <p class="f-panel" data-panel="opportunities">want to work with us? send us a cv &mdash; <a href="mailto:hello@splidget.com">hello@splidget.com</a>.</p>
-    <p class="f-panel" data-panel="foundation"><a href="https://splidget.local.forum" target="_blank" rel="noopener">splidget.local.forum</a> &mdash; password: splidget</p>
+    <p class="f-panel" data-panel="foundation"><a href="https://splidget.local.forum" target="_blank" rel="noopener">splidget.local.forum</a></p>
     <p class="f-panel" data-panel="authentification">every splidget is archived and issued an edition number, checked through a 7 stage verification. <a href="#/authentication">open authentication &rarr;</a></p>
   </div>
 </footer>
@@ -493,6 +524,36 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
     }
     verifyResult.textContent = lines.join('\n');
   });
+
+  /* ---------- christmas: countdown to midnight at the end of 20 dec, then the microtext goes ---------- */
+  var XMAS_END = Date.UTC(2026, 11, 21, 0, 0, 0);
+  var xmasNote = $('xmas-note'), xmasCount = $('xmas-count'), xmasTimer = null;
+  function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+  function xmasTick() {
+    var ms = XMAS_END - Date.now();
+    if (ms <= 0) {
+      xmasNote.style.display = 'none';
+      if (xmasTimer) clearInterval(xmasTimer);
+      return;
+    }
+    var s = Math.floor(ms / 1000);
+    var d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600),
+        m = Math.floor((s % 3600) / 60), sec = s % 60;
+    xmasCount.textContent = d + 'd ' + pad2(h) + 'h ' + pad2(m) + 'm ' + pad2(sec) + 's';
+  }
+  xmasTick();
+  xmasTimer = setInterval(xmasTick, 1000);
+
+  // hold the hat to reveal the message; let go to hide it
+  var xmasHat = $('xmas-hat');
+  function xmasShow(e) { if (xmasNote.style.display !== 'none') xmasNote.classList.add('show'); }
+  function xmasHide() { xmasNote.classList.remove('show'); }
+  xmasHat.addEventListener('pointerdown', function (e) { e.preventDefault(); xmasShow(e); });
+  xmasHat.addEventListener('pointerup', xmasHide);
+  xmasHat.addEventListener('pointerleave', xmasHide);
+  xmasHat.addEventListener('pointercancel', xmasHide);
+  xmasHat.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  xmasHat.addEventListener('dragstart', function (e) { e.preventDefault(); });
 })();
 </script>
 </body>
