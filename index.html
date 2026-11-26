@@ -83,7 +83,10 @@ body.irl-mode #irl-cursor{display:block}
 #receipt-row{display:none;min-height:470px}
 #get-one.open #receipt-row{display:flex;align-items:stretch}
 #r-carousel{flex:0 0 34%;max-width:34%;border-right:none;display:flex;flex-direction:column;padding:2.2em 1.4em 1.6em;box-sizing:border-box}
-#rc-img{display:block;width:100%;flex:1;min-height:0;object-fit:cover;background:transparent;box-shadow:none}
+#rc-img{display:block;width:100%;flex:1;min-height:0;object-fit:cover;background:transparent;box-shadow:none;touch-action:pan-y;cursor:pointer;-webkit-user-drag:none;user-select:none}
+#rc-detail{position:fixed;inset:0;z-index:40;background:#fff;display:none;align-items:center;justify-content:center;pointer-events:none;touch-action:none;overflow:hidden;cursor:pointer}
+#rc-detail.open{display:flex;pointer-events:auto}
+#rc-detail img{max-width:92vw;max-height:92vh;object-fit:contain;transform-origin:center;user-select:none;-webkit-user-drag:none;pointer-events:none}
 .rc-dots{display:flex;justify-content:center;gap:.5em;padding:1.2em 0 0}
 .rc-dot{width:6px;height:6px;border-radius:50%;border:none;background:#cfcfcf;padding:0;cursor:pointer}
 .rc-dot.active{background:#000}
@@ -242,6 +245,7 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
   </div>
 </div>
 
+<div id="rc-detail" aria-hidden="true"><img id="rc-detail-img" alt=""></div>
 <div id="irl-cursor" aria-hidden="true">IRL</div>
 
 <!-- ======================= underneath ======================= -->
@@ -493,22 +497,78 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
     if (tip.classList.contains('open') && e.target !== infoBtn && !tip.contains(e.target)) hideTip();
   });
 
-  /* ---------- get one: carousel of the packaging and the warranty card ---------- */
+  /* ---------- get one: carousel, swipe to change, tap for detail ---------- */
   var rcImages = [
     { src: 'scans/scan_02_sealed_packet.jpg', alt: 'splidget in its sealed packaging' },
     { src: 'scans/scan_07_warranty_card.jpg', alt: 'splidget warranty card' }
   ];
   var rcImg = $('rc-img');
   var rcDots = Array.prototype.slice.call(document.querySelectorAll('.rc-dot'));
+  var rcIndex = 0;
+  function rcSet(i) {
+    rcIndex = (i + rcImages.length) % rcImages.length;
+    rcImg.src = rcImages[rcIndex].src;
+    rcImg.alt = rcImages[rcIndex].alt;
+    rcDots.forEach(function (d, n) { d.classList.toggle('active', n === rcIndex); });
+  }
   rcDots.forEach(function (dot) {
-    dot.addEventListener('click', function () {
-      var i = +dot.getAttribute('data-i');
-      rcImg.src = rcImages[i].src;
-      rcImg.alt = rcImages[i].alt;
-      rcDots.forEach(function (d) { d.classList.remove('active'); });
-      dot.classList.add('active');
-    });
+    dot.addEventListener('click', function () { rcSet(+dot.getAttribute('data-i')); });
   });
+  rcImg.addEventListener('dragstart', function (e) { e.preventDefault(); });
+  rcImg.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+
+  var swipeX = null, swipeY = 0, swipeT = 0, swipeMoved = false;
+  rcImg.addEventListener('pointerdown', function (e) {
+    swipeX = e.clientX; swipeY = e.clientY; swipeT = Date.now(); swipeMoved = false;
+    rcImg.setPointerCapture(e.pointerId);
+  });
+  rcImg.addEventListener('pointermove', function (e) {
+    if (swipeX === null) return;
+    if (Math.abs(e.clientX - swipeX) > 8 || Math.abs(e.clientY - swipeY) > 8) swipeMoved = true;
+  });
+  rcImg.addEventListener('pointerup', function (e) {
+    if (swipeX === null) return;
+    var dx = e.clientX - swipeX, dt = Date.now() - swipeT;
+    swipeX = null;
+    if (Math.abs(dx) > 40) { rcSet(rcIndex + (dx < 0 ? 1 : -1)); return; }
+    if (!swipeMoved && dt < 400) openDetail();
+  });
+  rcImg.addEventListener('pointercancel', function () { swipeX = null; });
+
+  /* detail view: tap to open; in it, tap to close, or press and hold to zoom and drag to look around,
+     and let go to return to the order pane */
+  var rcDetail = $('rc-detail'), rcDetailImg = $('rc-detail-img');
+  var zoomTimer = null, zooming = false, scale = 1, panX = 0, panY = 0, lastX = 0, lastY = 0;
+  function applyDetail() {
+    rcDetailImg.style.transform = 'translate(' + panX + 'px,' + panY + 'px) scale(' + scale + ')';
+  }
+  function openDetail() {
+    rcDetailImg.src = rcImg.src;
+    rcDetailImg.alt = rcImg.alt;
+    scale = 1; panX = 0; panY = 0; zooming = false;
+    applyDetail();
+    rcDetail.classList.add('open');
+  }
+  function closeDetail() {
+    clearTimeout(zoomTimer);
+    zooming = false; scale = 1; panX = 0; panY = 0;
+    applyDetail();
+    rcDetail.classList.remove('open');
+  }
+  rcDetail.addEventListener('pointerdown', function (e) {
+    lastX = e.clientX; lastY = e.clientY; zooming = false;
+    rcDetail.setPointerCapture(e.pointerId);
+    zoomTimer = setTimeout(function () { zooming = true; scale = 2.2; applyDetail(); }, 300);
+  });
+  rcDetail.addEventListener('pointermove', function (e) {
+    if (!zooming) return;
+    panX += e.clientX - lastX; panY += e.clientY - lastY;
+    lastX = e.clientX; lastY = e.clientY;
+    applyDetail();
+  });
+  rcDetail.addEventListener('pointerup', closeDetail);
+  rcDetail.addEventListener('pointercancel', closeDetail);
+  rcDetail.addEventListener('contextmenu', function (e) { e.preventDefault(); });
 
   qtySel.addEventListener('change', recalcReceipt);
   countrySel.addEventListener('change', recalcReceipt);
