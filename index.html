@@ -482,6 +482,14 @@ h2{font-size:10px;font-weight:700;letter-spacing:.14em;margin:0 0 .8em}
     getBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
 
+  /* click or tap anywhere outside the order pane (and outside its detail view) to close it */
+  document.addEventListener('click', function (e) {
+    if (!getOne.classList.contains('open')) return;
+    if (getOne.contains(e.target) || rcDetail.contains(e.target)) return;
+    getOne.classList.remove('open');
+    getBtn.setAttribute('aria-expanded', 'false');
+  });
+
   /* ---------- get one: the "?" on online charge, hover or tap ---------- */
   var infoBtn = $('r-info') || document.querySelector('.r-info'), tip = $('r-tip');
   function showTip() { tip.classList.add('open'); infoBtn.setAttribute('aria-expanded', 'true'); }
